@@ -3763,7 +3763,8 @@
                 "frontal": "4 m (6 m sobre Ruta 10 y predios fiscales)",
                 "lateral1": null,
                 "lateral2": null,
-                "fondo": null
+                "fondo": null,
+                "frontal_ruta10": 6
               },
               "altura_maxima": 7,
               "pisos_maximos": "PB + PA",
@@ -3779,7 +3780,42 @@
                 "Muro frontal maximo: 1.30 m de altura promedio",
                 "Salientes: 1.50 m sobre retiro frontal"
               ],
-              "_data_quality": "pending"
+              "_data_quality": "verified",
+              "tipologias": [
+                {
+                  "codigo": "bloque_bajo",
+                  "nombre": "Bloque Bajo",
+                  "thresholds": {
+                    "area_min_m2": 1200,
+                    "frente_min_m": 30,
+                    "operator": "and"
+                  },
+                  "altura_m": 7,
+                  "pisos_label": "PB + PA",
+                  "FOS_pct": 40,
+                  "FOS_SS_pct": 40,
+                  "FOS_V_pct": 20,
+                  "FOT_pct": 70,
+                  "retiros": {
+                    "frontal_m": 4,
+                    "frontal_m_ruta10": 6,
+                    "lateral_m": null,
+                    "lateral_sum_min_m": null,
+                    "fondo_m": null
+                  },
+                  "notas": [
+                    "Frontal 6 m sobre Ruta 10 y predios fiscales; 4 m resto (Art. D.264 lit. d)",
+                    "Solo se permite la construccion de Bloques en la Subzona 1.2.2 Resto (Art. D.264 lit. b)",
+                    "Dimensiones minimas del predio: 1.200 m2 de area y 30 m de frente (Art. D.264 lit. c)",
+                    "Terrazas en PB con pergolas o toldos hasta 75% del area de retiro frontal",
+                    "Muro frontal en el limite del predio: altura promedio 1 m, maxima 1,30 m",
+                    "Salientes y cuerpos salientes: 1,50 m sobre retiro frontal (Art. D.264 lit. g)"
+                  ]
+                }
+              ],
+              "_notes": [
+                "tipologias[] transcritas de Art. D.264, Dto. 3718/1997 — https://digesto.maldonado.gub.uy/detalle-articulo/4154 (consultado 2026-07-21)"
+              ]
             }
           }
         },
@@ -3801,7 +3837,8 @@
                 "frontal": "4 m (6 m sobre Ruta 10)",
                 "lateral1": null,
                 "lateral2": null,
-                "fondo": null
+                "fondo": null,
+                "frontal_ruta10": 6
               },
               "altura_maxima": 9,
               "pisos_maximos": "PB + 1 PA + PH",
@@ -3835,7 +3872,8 @@
                     "frontal_m": 4,
                     "lateral_m": null,
                     "lateral_sum_min_m": null,
-                    "fondo_m": null
+                    "fondo_m": null,
+                    "frontal_m_ruta10": 6
                   },
                   "notas": [
                     "Frontal 6 m sobre Ruta 10 (4 m resto)",

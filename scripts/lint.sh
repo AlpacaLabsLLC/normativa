@@ -184,6 +184,37 @@ if [ -d "$ROOT/hooks" ]; then
   done
 fi
 
+# ---------- Vendored corpus drift ---------------------------------------
+#
+# skills/norma-analyze/datos/tone-zones.json is a RELEASE ARTIFACT synced from
+# Estudio-Local/mapa, never edited here. Mapa hosts the normativa corpus as the
+# public resource (mapa decision 260419-ELO-MAPA/0001); this plugin has to
+# vendor a copy because a distributed plugin cannot resolve it by path.
+#
+# Divergence is silent and consequential: before the 2026-08-27 sync this copy
+# had zona 1.2.2 at _data_quality "pending" with tipologias null, against a
+# verified transcription in Mapa — a user analysing padron 12131 got nothing.
+#
+# Skips when Mapa is not checked out (the normal case for anyone who cloned
+# only this repo). Point MAPA_TONE_JSON at the canonical file to override.
+
+VENDORED_TONE="$ROOT/skills/norma-analyze/datos/tone-zones.json"
+CANONICAL_TONE="${MAPA_TONE_JSON:-$HOME/Documents/code/mapa/normativa/datos/tone-zones.json}"
+
+if [ ! -f "$VENDORED_TONE" ]; then
+  err "tone-zones.json: vendored copy missing at skills/norma-analyze/datos/"
+elif [ ! -f "$CANONICAL_TONE" ]; then
+  ok "tone-zones.json: canonical copy not present, drift check skipped"
+else
+  if cmp -s "$VENDORED_TONE" "$CANONICAL_TONE"; then
+    ok "tone-zones.json: in sync with mapa"
+  else
+    err "tone-zones.json: DRIFTED from mapa. This file is a synced artifact, not a source."
+    err "  canonical: $CANONICAL_TONE"
+    err "  resync:    cp \"$CANONICAL_TONE\" \"$VENDORED_TONE\""
+  fi
+fi
+
 # ---------- Summary -----------------------------------------------------
 
 echo

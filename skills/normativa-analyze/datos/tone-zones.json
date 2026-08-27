@@ -3782,6 +3782,18 @@
                 "retiros.lateral2": {
                   "state": "sin_clasificar"
                 }
+              },
+              "aplicabilidad": {
+                "predicados": [
+                  {
+                    "tipo": "frentista",
+                    "descripcion": "Aplica solo a predios frentistas a vías principales residenciales (Art. D.216)",
+                    "articulo": "D.216",
+                    "evaluable": "parcial",
+                    "nota": "frentes[] identifica las calles que tocan el predio, así que Mapa puede acercarse; confirmar la vía exacta que exige el artículo queda por fuera"
+                  }
+                ],
+                "_migrado_de": "_data_quality: conditional (retirado en T0048)"
               }
             },
             "3.2.2": {
@@ -3874,6 +3886,18 @@
                 "retiros.lateral2": {
                   "state": "sin_clasificar"
                 }
+              },
+              "aplicabilidad": {
+                "predicados": [
+                  {
+                    "tipo": "frentista",
+                    "descripcion": "Aplica solo a predios frentistas a la Parada 5 con uso comercial PB+P1 obligatorio (Art. D.216)",
+                    "articulo": "D.216",
+                    "evaluable": "parcial",
+                    "nota": "frentes[] identifica las calles que tocan el predio, así que Mapa puede acercarse; confirmar la vía exacta que exige el artículo queda por fuera"
+                  }
+                ],
+                "_migrado_de": "_data_quality: conditional (retirado en T0048)"
               }
             },
             "3.2.3": {
@@ -3981,6 +4005,18 @@
                 "frente_minimo": {
                   "state": "sin_clasificar"
                 }
+              },
+              "aplicabilidad": {
+                "predicados": [
+                  {
+                    "tipo": "frentista",
+                    "descripcion": "Aplica solo a predios frentistas a la Rambla Claudio Williman — San Rafael comercial (Art. D.216)",
+                    "articulo": "D.216",
+                    "evaluable": "parcial",
+                    "nota": "frentes[] identifica las calles que tocan el predio, así que Mapa puede acercarse; confirmar la vía exacta que exige el artículo queda por fuera"
+                  }
+                ],
+                "_migrado_de": "_data_quality: conditional (retirado en T0048)"
               }
             }
           }
@@ -4092,6 +4128,18 @@
                 "FOS_verde": {
                   "state": "sin_clasificar"
                 }
+              },
+              "aplicabilidad": {
+                "predicados": [
+                  {
+                    "tipo": "frentista",
+                    "descripcion": "Aplica solo a predios frentistas a Avenida Roosevelt (Art. D.216). Usos residenciales en alta densidad (bloques altos hasta FOT 520% confirmado)",
+                    "articulo": "D.216",
+                    "evaluable": "parcial",
+                    "nota": "frentes[] identifica las calles que tocan el predio, así que Mapa puede acercarse; confirmar la vía exacta que exige el artículo queda por fuera"
+                  }
+                ],
+                "_migrado_de": "_data_quality: conditional (retirado en T0048)"
               }
             }
           }

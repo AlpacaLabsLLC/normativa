@@ -4444,13 +4444,22 @@
                   "state": "sin_clasificar"
                 },
                 "retiros.lateral1": {
-                  "state": "sin_clasificar"
+                  "state": "sin_definir",
+                  "art": "D.264",
+                  "nota": "D.264 define únicamente retiros frontales para la zona 1.2; laterales y fondo son silencio normativo, no un valor pendiente",
+                  "source": "verificado"
                 },
                 "retiros.lateral2": {
-                  "state": "sin_clasificar"
+                  "state": "sin_definir",
+                  "art": "D.264",
+                  "nota": "D.264 define únicamente retiros frontales para la zona 1.2; laterales y fondo son silencio normativo, no un valor pendiente",
+                  "source": "verificado"
                 },
                 "retiros.fondo": {
-                  "state": "sin_clasificar"
+                  "state": "sin_definir",
+                  "art": "D.264",
+                  "nota": "D.264 define únicamente retiros frontales para la zona 1.2; laterales y fondo son silencio normativo, no un valor pendiente",
+                  "source": "verificado"
                 }
               }
             },
@@ -4524,13 +4533,39 @@
               "_source": "verificado",
               "_state": {
                 "retiros.lateral1": {
-                  "state": "sin_clasificar"
+                  "state": "sin_definir",
+                  "art": "D.264",
+                  "nota": "D.264 define únicamente retiros frontales para la zona 1.2; laterales y fondo son silencio normativo, no un valor pendiente",
+                  "source": "verificado"
                 },
                 "retiros.lateral2": {
-                  "state": "sin_clasificar"
+                  "state": "sin_definir",
+                  "art": "D.264",
+                  "nota": "D.264 define únicamente retiros frontales para la zona 1.2; laterales y fondo son silencio normativo, no un valor pendiente",
+                  "source": "verificado"
                 },
                 "retiros.fondo": {
-                  "state": "sin_clasificar"
+                  "state": "sin_definir",
+                  "art": "D.264",
+                  "nota": "D.264 define únicamente retiros frontales para la zona 1.2; laterales y fondo son silencio normativo, no un valor pendiente",
+                  "source": "verificado"
+                },
+                "superficie_minima": {
+                  "state": "en_disputa",
+                  "art": "D.264 lit. c",
+                  "lecturas": [
+                    {
+                      "id": "solo_fraccionamientos",
+                      "texto": "El mínimo rige fraccionamientos nuevos; un padrón preexistente por debajo conserva su edificabilidad"
+                    },
+                    {
+                      "id": "todo_predio",
+                      "texto": "El mínimo rige todo predio, incluido el preexistente, que queda sin tipología aplicable"
+                    }
+                  ],
+                  "resolucion": "consulta previa ante Planeamiento, IDM",
+                  "consecuencia": "Decidió el no-go de padrón 49 (950 m² contra un mínimo de 1.200 m²); recurrente en al menos tres estudios",
+                  "source": "verificado"
                 }
               }
             }

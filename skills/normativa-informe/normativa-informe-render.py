@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-/norma-informe renderer — normativa.v1.json → printable A4 HTML report.
+/normativa-informe renderer — normativa.v1.json → printable A4 HTML report.
 
 Pure stdlib. No external dependencies.
 
 Usage:
-  python3 norma-informe-render.py <input.normativa.v1.json> [<output.html>]
+  python3 normativa-informe-render.py <input.normativa.v1.json> [<output.html>]
 
 If <output.html> is omitted, writes alongside the input as `<basename>.informe.html`
 (stripping the `.normativa.v1` suffix from the input).
@@ -364,7 +364,7 @@ def render(envelope, template):
 
         "{{CAVEATS_BLOCK}}":        build_caveats_html(caveats),
 
-        "{{GENERATOR_LINE}}":       f'/norma v{esc(envelope.get("skill_version") or "—")}',
+        "{{GENERATOR_LINE}}":       f'/normativa v{esc(envelope.get("skill_version") or "—")}',
     }
 
     out = template
@@ -406,7 +406,7 @@ def main():
         )
         sys.exit(1)
 
-    template_path = Path(__file__).parent / "norma-informe-plantilla.html"
+    template_path = Path(__file__).parent / "normativa-informe-plantilla.html"
     template = template_path.read_text()
 
     html = render(envelope, template)

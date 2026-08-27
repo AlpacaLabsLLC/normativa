@@ -6,10 +6,18 @@
   },
   "plugins": [
     {
+      "name": "normativa",
+      "source": "./",
+      "description": "Normativa — Maldonado UY zoning toolkit (TONE / Digesto Departamental, Volumen V). Dispatcher /normativa routes to sub-skills: /normativa-analyze (envelope analysis) + /normativa-informe (printable A4 HTML report) + /normativa-massing (interactive 3D massing configurator). Includes shared rules (envelope contract, disclaimer, units, terminology), a marker-driven disclaimer hook, and a structural lint.",
+      "version": "0.10.0"
+    },
+    {
       "name": "norma",
       "source": "./",
-      "description": "Norma — Maldonado UY zoning toolkit (TONE / Digesto Departamental, Volumen V). Dispatcher /norma routes to sub-skills: /norma-analyze (envelope analysis) + /norma-informe (printable A4 HTML report) + /norma-massing (interactive 3D massing configurator). Includes shared rules (envelope contract, disclaimer, units, terminology), a marker-driven disclaimer hook, and a structural lint.",
-      "version": "0.10.0"
+      "description": "DEPRECATED alias of `normativa`. The plugin was renamed 2026-08-27 so the command matches the repo and the skills (/normativa, /normativa-analyze, /normativa-informe, /normativa-massing). This entry exists so `/plugin update` keeps resolving for anyone installed as norma@normativa; install new as normativa@normativa.",
+      "version": "0.10.0",
+      "deprecated": true,
+      "replacedBy": "normativa"
     }
   ]
 }

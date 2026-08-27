@@ -2,14 +2,14 @@
 # post-write-disclaimer-check.sh
 #
 # Fires after the Write tool. Verifies that markdown / HTML outputs
-# claiming to be regulatory (via the `norma:requires-disclaimer`
+# claiming to be regulatory (via the `normativa:requires-disclaimer`
 # marker) also carry the canonical disclaimer block from
 # rules/professional-disclaimer.md.
 #
 # Contract:
 #   - A regulatory output ends with the canonical disclaimer block
 #     followed by the HTML-comment marker
-#     `<!-- norma:requires-disclaimer -->`.
+#     `<!-- normativa:requires-disclaimer -->`.
 #   - Marker present + disclaimer present  → exit 0 (pass)
 #   - Marker present + disclaimer missing  → exit 2 (block, blocking)
 #   - Marker absent                        → exit 0 (silent — output
@@ -36,8 +36,12 @@ esac
 [ ! -r "$FILE_PATH" ] && exit 0
 
 # Marker check — case-sensitive, exact substring.
-MARKER="norma:requires-disclaimer"
-if ! grep -qF "$MARKER" "$FILE_PATH"; then
+# LEGACY_MARKER is the pre-2026-08-27 spelling. Documents generated before the
+# /norma → /normativa rename carry it, and they are still regulatory output, so
+# the hook must keep recognising them. New output uses MARKER.
+MARKER="normativa:requires-disclaimer"
+LEGACY_MARKER="norma:requires-disclaimer"
+if ! grep -qF "$MARKER" "$FILE_PATH" && ! grep -qF "$LEGACY_MARKER" "$FILE_PATH"; then
   # No marker → output isn't claiming regulatory weight. Stay silent.
   exit 0
 fi
@@ -54,7 +58,7 @@ cat <<EOF >&2
 ✗ ${FILE_PATH##*/}: marker '${MARKER}' present, but canonical disclaimer text is missing.
 
 Per rules/professional-disclaimer.md, every output that emits the
-'norma:requires-disclaimer' marker must also include the canonical
+'normativa:requires-disclaimer' marker must also include the canonical
 "Análisis indicativo, no certificación..." block immediately above it.
 
 Either add the disclaimer block, or remove the marker if this output

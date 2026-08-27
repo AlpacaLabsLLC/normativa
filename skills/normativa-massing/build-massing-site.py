@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-build-massing-site.py — derive a /norma-massing SITE block from the pipeline,
+build-massing-site.py — derive a /normativa-massing SITE block from the pipeline,
 so the configurator NEVER hand-maintains a second source of truth for zoning.
 
 Pipeline (Mapa → norma zoning skill → massing):
   1. Mapa / cadastre   → parcel geometry (per lot + unified), locality, manzana.
   2. norma (UY zoning) → zone_code resolved, then `applicable_tipologias()`
-     (norma-analyze/norma-scenarios.py) reads the zone's tipologías straight
+     (norma-analyze/normativa-scenarios.py) reads the zone's tipologías straight
      from tone-zones.json — the SINGLE SOT for FOS/FOT/altura/retiros.
   3. massing           → this script emits the SITE block.
 
@@ -22,7 +22,7 @@ import argparse, importlib.util, json, math, os, sys, urllib.request, urllib.par
 HERE = os.path.dirname(os.path.abspath(__file__))
 ANALYZE = os.path.join(HERE, "..", "norma-analyze")
 _spec = importlib.util.spec_from_file_location("norma_scenarios",
-                                               os.path.join(ANALYZE, "norma-scenarios.py"))
+                                               os.path.join(ANALYZE, "normativa-scenarios.py"))
 _eng = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_eng)
 applicable_tipologias = _eng.applicable_tipologias
 

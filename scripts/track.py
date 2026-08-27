@@ -5,8 +5,8 @@ Usage:
     scripts/track.py <event>
 
 Where <event> is one of:
-    analyze_invoked   — fired by /norma-analyze at the end of a successful run
-    informe_rendered  — fired by /norma-informe after the printable HTML is written
+    analyze_invoked   — fired by /normativa-analyze at the end of a successful run
+    informe_rendered  — fired by /normativa-informe after the printable HTML is written
 
 What gets sent (and only this):
     - schema: 'estudio-local.norma_event.v1'

@@ -1,8 +1,8 @@
 # `normativa.v1.json` — schema spec
 
-Machine-readable envelope produced by `/norma-analyze` alongside the markdown report. Consumed by `/norma-informe` (HTML report renderer). End users typically invoke both via the `/norma` dispatcher.
+Machine-readable envelope produced by `/normativa-analyze` alongside the markdown report. Consumed by `/normativa-informe` (HTML report renderer). End users typically invoke both via the `/normativa` dispatcher.
 
-The schema id (`estudio-local.normativa.v1`) and filename suffix (`.normativa.v1.json`) intentionally preserve the historical `normativa` token — they are versioned data contracts, decoupled from the skill name. Renaming the skill (`/normativa` → `/TONE` → `/norma` → `/norma-analyze`, etc.) does not bump the schema.
+The schema id (`estudio-local.normativa.v1`) and filename suffix (`.normativa.v1.json`) intentionally preserve the historical `normativa` token — they are versioned data contracts, decoupled from the skill name. Renaming the skill (`/normativa` → `/TONE` → `/normativa` → `/normativa-analyze`, etc.) does not bump the schema.
 
 ## Conventions
 
@@ -113,7 +113,7 @@ Array of evaluated scenarios. Conventional ordering: A (individual lots) → B (
 }
 ```
 
-`sketch` is an OPTIONAL string carrying an ASCII envelope diagram for this scenario. When present, `/norma-informe` renders it inside a `<pre>` block on page 3 (Detalle del escenario recomendado). Conventions:
+`sketch` is an OPTIONAL string carrying an ASCII envelope diagram for this scenario. When present, `/normativa-informe` renders it inside a `<pre>` block on page 3 (Detalle del escenario recomendado). Conventions:
 
 - **Orient with frente at the bottom** so the page reader sees what they'd see standing on the street.
 - Use box-drawing characters (`┌─┐│└┘`) — Geist Mono renders them correctly.
@@ -123,7 +123,7 @@ Array of evaluated scenarios. Conventional ordering: A (individual lots) → B (
 - Use `\n` to separate lines — JSON requires escaped newlines.
 - Include sketches for every `applicable: true` scenario; the report only displays the recommended one but downstream readers may want the full set.
 
-When a tipología does NOT apply (lot too small, etc.), still include the scenario with `applicable: false` and a `reason` field — `/norma-informe` shows it greyed out. Omit `sketch` for non-applicable scenarios.
+When a tipología does NOT apply (lot too small, etc.), still include the scenario with `applicable: false` and a `reason` field — `/normativa-informe` shows it greyed out. Omit `sketch` for non-applicable scenarios.
 
 ## `recommendation`
 
@@ -156,7 +156,7 @@ Free-form Spanish strings, one per line. Keep ≤ 200 chars each.
 
 ```json
 {
-  "tone_zones":    "skills/norma-analyze/datos/tone-zones.json",
+  "tone_zones":    "skills/normativa-analyze/datos/tone-zones.json",
   "decretos":      ["Dto. 3970/2017"],
   "last_updated":  "2026-03-15",
   "map_url":       "https://estudio-local.com/mapa?padron=130,131,132&loc=la-juanita"
@@ -168,10 +168,10 @@ Free-form Spanish strings, one per line. Keep ≤ 200 chars each.
 
 ## Validation
 
-`/norma-analyze` MUST write a valid envelope on every run AND MUST run `normativa-v1-validate.py` against the output before declaring done. The validator (pure stdlib, ships next to this schema) refuses malformed envelopes with concrete per-field errors so you can fix them deterministically instead of trial-and-error against `/norma-informe`.
+`/normativa-analyze` MUST write a valid envelope on every run AND MUST run `normativa-v1-validate.py` against the output before declaring done. The validator (pure stdlib, ships next to this schema) refuses malformed envelopes with concrete per-field errors so you can fix them deterministically instead of trial-and-error against `/normativa-informe`.
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/norma-analyze/normativa-v1-validate.py <output-path>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/normativa-analyze/normativa-v1-validate.py <output-path>
 ```
 
 Minimum required keys:
@@ -184,7 +184,7 @@ Minimum required keys:
 - `caveats` (empty array OK)
 - `sources.map_url` (string — link to the parcel on the Mapa app, see `sources` section above)
 
-`/norma-informe` refuses to render if any required key is missing.
+`/normativa-informe` refuses to render if any required key is missing.
 
 ## Strict types & common pitfalls
 
@@ -216,11 +216,11 @@ These mistakes silently produce broken output (the renderer crashes or shows `�
 
 - **v1**: this document.
 - **Additive changes** (new optional fields): stay v1, document under "Changelog".
-- **Breaking changes** (removed/renamed fields, changed types): bump to v2, ship side-by-side support in `/norma-informe` for one minor release, then drop v1.
+- **Breaking changes** (removed/renamed fields, changed types): bump to v2, ship side-by-side support in `/normativa-informe` for one minor release, then drop v1.
 
 ## Sister envelope: `selection.v1.json` (optional input)
 
-When `/norma-analyze` is invoked with `--input <path>`, the file is a `selection.v1.json` envelope that pre-resolves the parcel selection. Shape:
+When `/normativa-analyze` is invoked with `--input <path>`, the file is a `selection.v1.json` envelope that pre-resolves the parcel selection. Shape:
 
 ```json
 {
@@ -265,9 +265,9 @@ When `/norma-analyze` is invoked with `--input <path>`, the file is a `selection
 }
 ```
 
-**Authority rules for `/norma` when consuming this:**
+**Authority rules for `/normativa` when consuming this:**
 - `padrones`, `locality`, `area_total_m2`, `regimen`, `lots[]` are **authoritative** — copy verbatim into the output's `selection.*`.
-- `zone_hint.code` is a **suggestion** — `/norma` should still resolve the zone independently from `tone-zones.json` and only use the hint if its own resolution is ambiguous.
+- `zone_hint.code` is a **suggestion** — `/normativa` should still resolve the zone independently from `tone-zones.json` and only use the hint if its own resolution is ambiguous.
 - **`lots[].frentes[]` is authoritative** when present — pre-computed by the Mapa app via parcel-polygon × IDE-calles intersection in UTM 21S meters. Do NOT re-derive frente from polygon dimensions if this field is present. When multiple frentes are listed, apply the TONE "frente principal" rule:
   1. **Rank by `calle_tipo` hierarchy:** `Ruta > CALLE > PASAJE > PASAJE INTERNO > PEATONAL > CALLE INTERNA > VIRTUAL > SENDERO`. Higher tier = higher priority for the principal frente.
   2. **Within `CALLE`:** parse `calle_nombre` for `"AVENIDA"`/`"AVDA"`/`"BOULEVARD"`/`"BLVD"` prefixes — these outrank plain calles per the TONE jerarquía vial.
@@ -276,7 +276,7 @@ When `/norma-analyze` is invoked with `--input <path>`, the file is a `selection
 - **`selection.frente_estimado_m`** (top-level) is best-effort — superseded by `lots[].frentes[].length_m` when present.
 - When `lots[].frentes` is empty `[]`, the parcel didn't intersect any cataloged calle within 15m. This typically means: (a) area=0 placeholder cadastral record, (b) interior parcel of a manzana with no street access, or (c) IDE catalog gap for that subdivision. Flag in caveats and fall back to polygon-dimension heuristic only as a last resort.
 
-This input mode is optional. `/norma` works equally well with padron lists or pasted GIS JSON (see SKILL.md).
+This input mode is optional. `/normativa` works equally well with padron lists or pasted GIS JSON (see SKILL.md).
 
 ## Changelog
 

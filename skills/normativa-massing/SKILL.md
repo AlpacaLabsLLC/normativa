@@ -1,6 +1,6 @@
 ---
-name: norma-massing
-description: Build an interactive 3D building-massing configurator from a /norma-analyze envelope. Generates a self-contained HTML where the legal zoning envelope is the fixed container and the user tests massing options (parti, program, circulation, orientation) with live FOS/FOT/height/unit metrics and live compliance flags. Invoked directly or via the /norma dispatcher.
+name: normativa-massing
+description: Build an interactive 3D building-massing configurator from a /normativa-analyze envelope. Generates a self-contained HTML where the legal zoning envelope is the fixed container and the user tests massing options (parti, program, circulation, orientation) with live FOS/FOT/height/unit metrics and live compliance flags. Invoked directly or via the /normativa dispatcher.
 allowed-tools:
   - Read
   - Write
@@ -12,13 +12,13 @@ allowed-tools:
 user-invocable: true
 ---
 
-# /norma-massing — 3D massing configurator from a `/norma-analyze` envelope
+# /normativa-massing — 3D massing configurator from a `/normativa-analyze` envelope
 
-Invoked directly (`/norma-massing path/to/envelope.normativa.v1.json`) or routed-to by the
-`/norma` dispatcher when the user wants to *explore building forms inside* the zoning envelope
-— the step **after** `/norma-analyze` resolves what's legal.
+Invoked directly (`/normativa-massing path/to/envelope.normativa.v1.json`) or routed-to by the
+`/normativa` dispatcher when the user wants to *explore building forms inside* the zoning envelope
+— the step **after** `/normativa-analyze` resolves what's legal.
 
-Where `/norma-informe` renders the envelope as a static report, this skill turns it into a
+Where `/normativa-informe` renders the envelope as a static report, this skill turns it into a
 **parametric massing studio**: one self-contained interactive HTML file (Three.js, CDN-only,
 no build, no server). The legal envelope is a frozen translucent "ghost" container; the user
 drives sliders/toggles and the massing regenerates with live metrics and green/red legality
@@ -35,27 +35,27 @@ subzona **2-1-2-2** envelope (FOS 30–35 % / FOT 60–70 % / altura 7–9 m). N
 ## Rules this skill follows
 
 - [`rules/envelope-contract.md`](../../rules/envelope-contract.md) — the strict-typed `normativa.v1.json` fields this skill consumes (scenarios[].envelope FOS_pct/FOT_pct/altura_m, retiros, selection.lots[].frentes).
-- [`rules/professional-disclaimer.md`](../../rules/professional-disclaimer.md) — the generated HTML carries the canonical disclaimer block + `norma:requires-disclaimer` marker (it emits FOS/FOT figures, so it is regulatory output).
+- [`rules/professional-disclaimer.md`](../../rules/professional-disclaimer.md) — the generated HTML carries the canonical disclaimer block + `normativa:requires-disclaimer` marker (it emits FOS/FOT figures, so it is regulatory output).
 - [`rules/units-and-measurements.md`](../../rules/units-and-measurements.md) — everything is metric (m, m², %), es-UY locale; the working CRS is UTM 21S meters.
 
 ## What this skill does NOT do
 
-- It does **not** perform zoning lookups, resolve the zone, or compute the legal envelope — that is `/norma-analyze`'s job. This skill consumes its `*.normativa.v1.json` output.
+- It does **not** perform zoning lookups, resolve the zone, or compute the legal envelope — that is `/normativa-analyze`'s job. This skill consumes its `*.normativa.v1.json` output.
 - It does **not** draw interiors or floor plans. "Envelope only": it generates **volumes**. Program/circulation are parameters that shape the volumes and their derived metrics, not drawn rooms.
 - It does **not** certify anything. The output is exploratory massing; the disclaimer says so.
 
 ## Usage
 
 ```
-/norma-massing path/to/padron-1881.normativa.v1.json
-/norma-massing 130,131,132 la-juanita      # finds the matching *.normativa.v1.json in CWD
-/norma-massing                              # uses the most recent *.normativa.v1.json
+/normativa-massing path/to/padron-1881.normativa.v1.json
+/normativa-massing 130,131,132 la-juanita      # finds the matching *.normativa.v1.json in CWD
+/normativa-massing                              # uses the most recent *.normativa.v1.json
 ```
 
 ## Step 1 — Load the envelope
 
 Resolve the `*.normativa.v1.json` input (explicit path → search by padrón/locality → most
-recent in CWD). If none found, tell the user to run `/norma-analyze` first. Validate the
+recent in CWD). If none found, tell the user to run `/normativa-analyze` first. Validate the
 `schema` is `estudio-local.normativa.v1`.
 
 Pick the **recommended scenario** (`recommendation.scenario_id` → its `scenarios[]` entry) as
@@ -64,7 +64,7 @@ active scenario take `envelope.FOS_pct`, `envelope.FOT_pct`, `envelope.altura_m`
 (`frontal_m`/`lateral_m`/`fondo_m`/`entre_volumenes_m`).
 
 > **Single source of truth — never hand-code the caps.** FOS/FOT/altura/retiros are *inherited*
-> down the pipeline **Mapa → `/norma-analyze` → `/norma-massing`**: `/norma-analyze` resolves the
+> down the pipeline **Mapa → `/normativa-analyze` → `/normativa-massing`**: `/normativa-analyze` resolves the
 > parcel's `zone_code` and reads the coefficients from `tone-zones.json` (the SOT), emitting them
 > in `normativa.v1.json`; this skill copies them verbatim into `SITE.scenarios`. The Mapa relays
 > the same `tone-zones.json` data but does not expose FOS/FOT as JSON, so the envelope (or the
@@ -73,7 +73,7 @@ active scenario take `envelope.FOS_pct`, `envelope.FOT_pct`, `envelope.altura_m`
 >
 > For the reference demo, the `SITE` block is produced by
 > [`build-massing-site.py`](./build-massing-site.py), which runs the real pipeline (cadastre
-> geometry + `norma-analyze/norma-scenarios.py` reading `tone-zones.json`) and emits the scenarios.
+> geometry + `norma-analyze/normativa-scenarios.py` reading `tone-zones.json`) and emits the scenarios.
 > Regenerate it; do not edit `SITE` by hand.
 
 ## Step 2 — Acquire the parcel polygon
@@ -88,7 +88,7 @@ active scenario take `envelope.FOS_pct`, `envelope.FOT_pct`, `envelope.altura_m`
    /`codloccat` (locality — **padrón numbers repeat across localities, so always filter by
    locality**), `nummancat` (manzana), `valaream2` (authoritative cadastral area). The zoning
    subzone polygons are a *different* service (`ORDENANZA_CONSTRUCCION`, synced by
-   [`../norma-analyze/datos/norma-sync-zoning.py`](../norma-analyze/datos/norma-sync-zoning.py)).
+   [`../normativa-analyze/datos/normativa-sync-zoning.py`](../normativa-analyze/datos/normativa-sync-zoning.py)).
    For multi-padrón englobamiento, union the rings (convex hull is a fine approximation when the
    lots form a block).
 2. **Fallback — pasted geometry.** Accept ArcGIS JSON (`geometry.rings`) or GeoJSON the user pastes.
@@ -219,7 +219,7 @@ Floor height default 3.0 m. Solar half-angle ±60° from north.
 
 ### Disclaimer (required)
 The HTML must carry, near the end of `<body>`, the canonical disclaimer comment + the
-`<!-- norma:requires-disclaimer -->` marker + a small visible disclaimer panel (see the
+`<!-- normativa:requires-disclaimer -->` marker + a small visible disclaimer panel (see the
 reference). The output emits FOS/FOT figures, so this is mandatory per `rules/professional-disclaimer.md`.
 
 ## Step 5 — Save + open
@@ -241,4 +241,4 @@ Save next to the source envelope as `massing-<locality>-<padrones>.html`
 
 > **Análisis indicativo, no certificación.** Este informe se basa en datos catastrales publicados por la Intendencia de Maldonado y en la interpretación del TONE vigente al momento de la generación. No reemplaza el dictamen del cuerpo técnico de la Intendencia ni la consulta formal previa a un trámite de permiso.
 
-<!-- norma:requires-disclaimer -->
+<!-- normativa:requires-disclaimer -->

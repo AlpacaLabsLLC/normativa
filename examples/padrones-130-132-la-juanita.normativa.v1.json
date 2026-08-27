@@ -265,7 +265,7 @@
     "Cantidad de viviendas es estimación con 80 m² promedio — proyecto definitivo determina densidad real."
   ],
   "sources": {
-    "tone_zones": "skills/norma/datos/tone-zones.json",
+    "tone_zones": "skills/normativa/datos/tone-zones.json",
     "decretos": [
       "Dto. 3970/2017",
       "Dto. 4056/2022"

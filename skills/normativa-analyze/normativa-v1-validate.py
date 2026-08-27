@@ -4,7 +4,7 @@ normativa-v1-validate.py — strict validator for `*.normativa.v1.json` envelope
 
 Named after the schema id (`estudio-local.normativa.v1`) rather than after a
 specific skill, so the script survives skill renames intact. Runs after
-/norma-analyze writes its output, before /norma-informe consumes it. Refuses
+/normativa-analyze writes its output, before /normativa-informe consumes it. Refuses
 malformed envelopes with concrete error messages so the LLM author can fix
 them without guesswork.
 
@@ -294,7 +294,7 @@ def main():
         for line in errors:
             print(line, file=sys.stderr)
         print(file=sys.stderr)
-        print("Fix the envelope and re-run. Reference: skills/norma-analyze/normativa-v1-schema.md",
+        print("Fix the envelope and re-run. Reference: skills/normativa-analyze/normativa-v1-schema.md",
               file=sys.stderr)
         sys.exit(1)
 

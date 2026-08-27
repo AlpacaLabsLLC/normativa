@@ -1,6 +1,6 @@
 {
-  "name": "norma",
-  "description": "Norma — Maldonado UY zoning toolkit. /norma dispatcher routes to /norma-analyze (envelope analysis), /norma-informe (printable report), or /norma-massing (interactive 3D massing configurator). Reads the TONE (Texto Ordenado de Normas Edilicias / Digesto Departamental, Volumen V).",
+  "name": "normativa",
+  "description": "Normativa — Maldonado UY zoning toolkit. /normativa dispatcher routes to /normativa-analyze (envelope analysis), /normativa-informe (printable report), or /normativa-massing (interactive 3D massing configurator). Reads the TONE (Texto Ordenado de Normas Edilicias / Digesto Departamental, Volumen V).",
   "version": "0.10.0",
   "author": {
     "name": "Estudio Local",

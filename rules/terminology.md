@@ -27,7 +27,7 @@ Always cite by `codigo`. Never invent variants. If the TONE introduces a new tip
 
 ## Frente principal hierarchy
 
-When a parcel has multiple `frentes[]` (touches multiple calles), `/norma-analyze` picks the canonical principal by ranking on `calle_tipo`:
+When a parcel has multiple `frentes[]` (touches multiple calles), `/normativa-analyze` picks the canonical principal by ranking on `calle_tipo`:
 
 1. `Ruta`
 2. `CALLE` (within: AVENIDA / AVDA / BOULEVARD / BLVD prefix in `nombre` outranks plain CALLE)

@@ -4,7 +4,7 @@ Hooks fire on Claude Code tool events. Norma's hooks enforce contracts that woul
 
 | Hook | Event | Contract |
 |------|-------|----------|
-| [`post-write-disclaimer-check.sh`](./post-write-disclaimer-check.sh) | After `Write` tool, on `*.md` and `*.html` files | If the output carries the `<!-- norma:requires-disclaimer -->` marker, the canonical disclaimer block from `rules/professional-disclaimer.md` MUST also be present. Marker without disclaimer = hook fails. No marker = hook stays silent. |
+| [`post-write-disclaimer-check.sh`](./post-write-disclaimer-check.sh) | After `Write` tool, on `*.md` and `*.html` files | If the output carries the `<!-- normativa:requires-disclaimer -->` marker, the canonical disclaimer block from `rules/professional-disclaimer.md` MUST also be present. Marker without disclaimer = hook fails. No marker = hook stays silent. |
 
 ## Wiring the hook
 
@@ -12,7 +12,7 @@ Two ways to enable hooks for the Norma plugin:
 
 ### As a plugin user
 
-If you installed Norma via `/plugin install norma@normativa`, hooks ship inactive — Claude Code doesn't auto-enable plugin-bundled hooks (avoiding silent behavior changes). To enable, add to your `~/.claude/settings.json`:
+If you installed Norma via `/plugin install normativa@normativa`, hooks ship inactive — Claude Code doesn't auto-enable plugin-bundled hooks (avoiding silent behavior changes). To enable, add to your `~/.claude/settings.json`:
 
 ```json
 {
@@ -36,7 +36,7 @@ The snippet is also available verbatim in [`settings-snippet.json`](./settings-s
 
 ### As a Norma developer
 
-The lint script (`scripts/lint.sh`) verifies that any SKILL.md citing `norma:requires-disclaimer` also names this hook in its setup notes — so a skill author can't add a disclaimer-marker output without flagging the hook to its users.
+The lint script (`scripts/lint.sh`) verifies that any SKILL.md citing `normativa:requires-disclaimer` also names this hook in its setup notes — so a skill author can't add a disclaimer-marker output without flagging the hook to its users.
 
 ## Why marker-driven (vs content-classification)
 

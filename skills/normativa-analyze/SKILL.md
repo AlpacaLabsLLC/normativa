@@ -1,6 +1,6 @@
 ---
-name: norma-analyze
-description: Analyze zoning envelope rules for lots in Maldonado, Uruguay using GIS data and the TONE (Texto Ordenado de Normas Edilicias, Volumen V del Digesto Departamental). Invoked directly or via the /norma dispatcher.
+name: normativa-analyze
+description: Analyze zoning envelope rules for lots in Maldonado, Uruguay using GIS data and the TONE (Texto Ordenado de Normas Edilicias, Volumen V del Digesto Departamental). Invoked directly or via the /normativa dispatcher.
 allowed-tools:
   - Read
   - Write
@@ -13,16 +13,16 @@ allowed-tools:
 user-invocable: true
 ---
 
-# /norma-analyze — Zoning Envelope Analysis (Maldonado, Uruguay)
+# /normativa-analyze — Zoning Envelope Analysis (Maldonado, Uruguay)
 
 Analyze building envelope rules for one or more lots in Maldonado using GIS data from the ArcGIS cadastral portal and the TONE (Volume V of the Digesto Departamental). When multiple adjoining lots are provided, compares individual, apareada (party wall), and unified (englobamiento) development scenarios.
 
-This skill is invoked directly (`/norma-analyze ...`) or routed-to by the `/norma` dispatcher when a user's task is shaped like an analysis request. The output (markdown report + `*.normativa.v1.json` envelope) is the input to `/norma-informe` for the printable A4 HTML report.
+This skill is invoked directly (`/normativa-analyze ...`) or routed-to by the `/normativa` dispatcher when a user's task is shaped like an analysis request. The output (markdown report + `*.normativa.v1.json` envelope) is the input to `/normativa-informe` for the printable A4 HTML report.
 
 ## Rules this skill follows
 
 - [`rules/envelope-contract.md`](../../rules/envelope-contract.md) — strict types + structural rules for the `*.normativa.v1.json` envelope (the contract this skill produces).
-- [`rules/professional-disclaimer.md`](../../rules/professional-disclaimer.md) — every markdown analysis emits the `<!-- norma:requires-disclaimer -->` marker + canonical block. Hook-enforced via `hooks/post-write-disclaimer-check.sh`.
+- [`rules/professional-disclaimer.md`](../../rules/professional-disclaimer.md) — every markdown analysis emits the `<!-- normativa:requires-disclaimer -->` marker + canonical block. Hook-enforced via `hooks/post-write-disclaimer-check.sh`.
 - [`rules/units-and-measurements.md`](../../rules/units-and-measurements.md) — SI conventions, ISO-8601 dates, regimen + data_quality enums.
 - [`rules/terminology.md`](../../rules/terminology.md) — canonical tipología codes, TONE frente-principal hierarchy, decreto citation format, locality slugs.
 
@@ -58,8 +58,8 @@ Three ways to invoke this skill — pick the path that matches what the user pro
 
 | Invocation | Where the data comes from | Jump to |
 |------------|---------------------------|---------|
-| `/norma-analyze --input <path>` | `selection.v1.json` envelope — already contains padrones, locality, total area, régimen, per-lot data | **Step 1a** |
-| `/norma-analyze 130,131,132 en la-juanita` (padrones + locality phrase) | Look up each padrón via the cadastral portal | **Step 1** |
+| `/normativa-analyze --input <path>` | `selection.v1.json` envelope — already contains padrones, locality, total area, régimen, per-lot data | **Step 1a** |
+| `/normativa-analyze 130,131,132 en la-juanita` (padrones + locality phrase) | Look up each padrón via the cadastral portal | **Step 1** |
 | Pasted ArcGIS JSON (one or more features) | Direct from the Maldonado ArcGIS cadastral portal | **Step 1** |
 
 The end state is always the same: an in-memory `selection` object containing `{ padrones, locality, area_total_m2, regimen, lots[] }`. From there the workflow is identical.
@@ -176,13 +176,13 @@ To convert EPSG:3857 to lat/lon for reference:
 
 ### Step 3: Look Up Location
 
-Read `~/.claude/skills/norma-analyze/datos/location-map.md` to match `nomloccat` to a TONE sector/region.
+Read `~/.claude/skills/normativa-analyze/datos/location-map.md` to match `nomloccat` to a TONE sector/region.
 
 If no match is found, search the digesto website at `https://digesto.maldonado.gub.uy/` for the location.
 
 ### Step 4: Load Normativa
 
-Read the corresponding normativa file from `~/.claude/skills/norma-analyze/datos/`.
+Read the corresponding normativa file from `~/.claude/skills/normativa-analyze/datos/`.
 
 If the file doesn't exist yet:
 1. Fetch the relevant articles from the digesto using WebFetch
@@ -193,7 +193,7 @@ If the file doesn't exist yet:
 
 ### Step 5: Determine Zone/Subzone
 
-1. **First**, read `~/.claude/skills/norma-analyze/datos/tone-zones.json` — a structured index of all 10 localities, 33 zones, 91 subzones. Each subzone carries a `tipologias[]` array (per Phase 2 schema, April 2026) with per-tipología `thresholds` (area_min_m2, frente_min_m), altura, pisos, FOT/FOS/FOS_SS/FOS_V, and retiros. Also carries `_data_quality` (verified / partial / estimated / pending / conditional) and optional `_applicability_note`. Use it to narrow candidates by matching `nomloccat` to a locality and `nummancat` to manzana descriptions. When `_data_quality !== 'verified'`, surface the caveat in the analysis output.
+1. **First**, read `~/.claude/skills/normativa-analyze/datos/tone-zones.json` — a structured index of all 10 localities, 33 zones, 91 subzones. Each subzone carries a `tipologias[]` array (per Phase 2 schema, April 2026) with per-tipología `thresholds` (area_min_m2, frente_min_m), altura, pisos, FOT/FOS/FOS_SS/FOS_V, and retiros. Also carries `_data_quality` (verified / partial / estimated / pending / conditional) and optional `_applicability_note`. Use it to narrow candidates by matching `nomloccat` to a locality and `nummancat` to manzana descriptions. When `_data_quality !== 'verified'`, surface the caveat in the analysis output.
 2. **Then**, cross-reference against the full normativa text (loaded in Step 4) to verify zone boundaries described by street names and geographic features.
 3. Use `nomloccat` and `nummancat` (block number) to match zone boundary descriptions
 4. Check position relative to Ruta 10, coastline, and named streets
@@ -204,7 +204,7 @@ If the file doesn't exist yet:
 
 Apply the normativa rules to the specific lot.
 
-**Prefer the scenario engine when available:** if the subzone carries a `tipologias[]` array, use `norma-analyze/norma-scenarios.py` → `applicable_tipologias(zone, area_m2, frente_m)` to filter tipologías whose `thresholds` are met. The returned list drives per-tipología envelope math (altura/FOT/FOS/retiros come from each tipología entry directly). Fall back to legacy scalar fields (`altura_maxima`, `FOT`, `FOS`, `retiros`) only for subzones that don't carry `tipologias[]` yet (27 pending zones as of 2026-04-24).
+**Prefer the scenario engine when available:** if the subzone carries a `tipologias[]` array, use `norma-analyze/normativa-scenarios.py` → `applicable_tipologias(zone, area_m2, frente_m)` to filter tipologías whose `thresholds` are met. The returned list drives per-tipología envelope math (altura/FOT/FOS/retiros come from each tipología entry directly). Fall back to legacy scalar fields (`altura_maxima`, `FOT`, `FOS`, `retiros`) only for subzones that don't carry `tipologias[]` yet (27 pending zones as of 2026-04-24).
 
 1. **Permitted building types**: For each tipología in the subzone, check `thresholds.area_min_m2` and `thresholds.frente_min_m` against the lot. Use `scenarios.applicable_tipologias` when available
 2. **Maximum height and floors**: Per-tipología — read `altura_m` and `pisos_label` from the tipología entry
@@ -340,7 +340,7 @@ Use lowercase, hyphens for spaces, and the locality name (e.g., `buenos-aires`, 
 - Single lot: `padron-{number}-{location}.normativa.v1.json`
 - Multiple lots: `padrones-{range}-{location}-{count}-lots.normativa.v1.json`
 
-This file is the contract between `/norma-analyze` and `/norma-informe`. The shape is strict: don't paraphrase it, don't restructure fields, don't guess types. If the validator (Step 8c) rejects your output, fix the envelope — do not skip ahead to `/norma-informe`.
+This file is the contract between `/normativa-analyze` and `/normativa-informe`. The shape is strict: don't paraphrase it, don't restructure fields, don't guess types. If the validator (Step 8c) rejects your output, fix the envelope — do not skip ahead to `/normativa-informe`.
 
 **Read the canonical example before writing.** A fully populated valid envelope ships at `${CLAUDE_PLUGIN_ROOT}/examples/padrones-130-132-la-juanita.normativa.v1.json`. Match its field nesting, key names, and types verbatim. Full spec at [`normativa-v1-schema.md`](./normativa-v1-schema.md).
 
@@ -370,7 +370,7 @@ This file is the contract between `/norma-analyze` and `/norma-informe`. The sha
 - When invoked with `--input selection.v1.json`, **echo the input's `selection.*` values verbatim** into the output. Do not re-derive padrones/locality/area/régimen.
 - `tipologias_catalog` (in `zone`) is the FULL list of tipologías for the zone. Per-scenario `applicable`/`tipologias_habilitadas` say which are reachable for *this* selection.
 - Bias `recommendation` by **m² edificable yield** unless an explicit constraint kills the high-yield path (régimen PH blocking englobamiento, special_rule overrides, etc.).
-- **Always populate `sources.map_url`** so the report links back to the lot on the Mapa app. Pattern: `https://estudio-local.com/mapa?padron=<comma-joined-padrones>&loc=<locality-slug>`. Use the same locality slug that goes into `selection.locality` and the same padron order as `selection.padrones[]`. The validator rejects envelopes without it — `/norma-informe` surfaces the link prominently on page 1 so the reader can inspect the parcel geometry, neighbors, and zoning overlay without leaving the report.
+- **Always populate `sources.map_url`** so the report links back to the lot on the Mapa app. Pattern: `https://estudio-local.com/mapa?padron=<comma-joined-padrones>&loc=<locality-slug>`. Use the same locality slug that goes into `selection.locality` and the same padron order as `selection.padrones[]`. The validator rejects envelopes without it — `/normativa-informe` surfaces the link prominently on page 1 so the reader can inspect the parcel geometry, neighbors, and zoning overlay without leaving the report.
 - **Include an ASCII envelope sketch (`scenarios[].sketch`) for every `applicable: true` scenario.** Orient frente at the bottom (street-level view). Use box-drawing characters (`┌─┐│└┘`) — Geist Mono in the report renders them cleanly. Label retiros by side with meters, name the buildable zone in the interior, and put headline FOS / FOT figures inside. Keep total width ≤ 60 columns so it fits the print page without wrapping. Use `\n` for line breaks (JSON-escaped). Skip sketches for `applicable: false` scenarios. Example:
 
   ```
@@ -393,7 +393,7 @@ The markdown report (Step 8) and this JSON sidecar carry the same information �
 Run the strict validator on the file you just wrote:
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/norma-analyze/normativa-v1-validate.py <path-to-output.normativa.v1.json>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/normativa-analyze/normativa-v1-validate.py <path-to-output.normativa.v1.json>
 ```
 
 Expected output on success:
@@ -402,13 +402,13 @@ Expected output on success:
 ok <basename>: envelope conforms to estudio-local.normativa.v1
 ```
 
-If the validator exits non-zero, it prints concrete per-field errors. Fix every error and re-run until it prints `ok`. Do not consider Step 8 complete with a failing validator — `/norma-informe` will choke on the same issues. The validator is fast (pure stdlib, no I/O beyond reading the JSON) so iterate freely.
+If the validator exits non-zero, it prints concrete per-field errors. Fix every error and re-run until it prints `ok`. Do not consider Step 8 complete with a failing validator — `/normativa-informe` will choke on the same issues. The validator is fast (pure stdlib, no I/O beyond reading the JSON) so iterate freely.
 
 ### Step 9: Save Normativa (if fetched)
 
 If new articles were fetched from the digesto during this analysis:
 1. Ask the user if they want to save them as a local normativa reference file
-2. If yes, write to `~/.claude/skills/norma-analyze/datos/` with a descriptive filename
+2. If yes, write to `~/.claude/skills/normativa-analyze/datos/` with a descriptive filename
 3. Update `location-map.md` with the new mapping
 
 ### Step 10: Record the run (telemetry)
@@ -606,7 +606,7 @@ Which scenario offers the best development potential, considering:
 
 Canonical tipología codes: `unidad_aislada`, `unidad_apareada`, `edificacion_baja`, `bloque_bajo_9m`, `bloque_bajo_12m`, `bloque_bajo`, `bloque_medio`, `bloque_alto`, `conjunto_unidades`, `conjunto_bloques`, `torre_media`, `torre_alta`, `hotelero`.
 
-Engine: `norma-analyze/norma-scenarios.py` exposes `applicable_tipologias(zone, area_m2, frente_m, es_manzana_entera=False)` — a pure function returning the filtered tipologías.
+Engine: `norma-analyze/normativa-scenarios.py` exposes `applicable_tipologias(zone, area_m2, frente_m, es_manzana_entera=False)` — a pure function returning the filtered tipologías.
 
 Data-quality levels drive both the analysis and any UI warnings:
 - **verified** — full source citation
@@ -615,7 +615,7 @@ Data-quality levels drive both the analysis and any UI warnings:
 - **pending** — source not transcribed; avoid committing to numbers
 - **conditional** — applies only under condition (see `_applicability_note`); confirm with user before applying
 
-Extraction pipeline: `norma-extract-tipologias.py` + `norma-merge-tipologias.py` (with AI review per titulo). See `estudios/phase2-extraction-report-2026-04-24.md` for coverage snapshot and human review items.
+Extraction pipeline: `normativa-extract-tipologias.py` + `normativa-merge-tipologias.py` (with AI review per titulo). See `estudios/phase2-extraction-report-2026-04-24.md` for coverage snapshot and human review items.
 
 ### Multi-lot notes
 - **Apareadas** (party wall): each lot retains its own padrón and is calculated independently; the shared boundary has 0 m setback; the TONE permits this wherever "unidades apareadas" are listed as an allowed building type

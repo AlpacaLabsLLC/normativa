@@ -1,8 +1,8 @@
 # Envelope contract — strict types
 
-The `*.normativa.v1.json` envelope is the contract between `/norma-analyze` (producer) and `/norma-informe` (consumer). It also flows through any LLM that the user pastes the envelope into. The full schema spec is `skills/norma-analyze/normativa-v1-schema.md`; this rule is the **enforcement summary** that every skill cites when emitting or consuming envelopes.
+The `*.normativa.v1.json` envelope is the contract between `/normativa-analyze` (producer) and `/normativa-informe` (consumer). It also flows through any LLM that the user pastes the envelope into. The full schema spec is `skills/normativa-analyze/normativa-v1-schema.md`; this rule is the **enforcement summary** that every skill cites when emitting or consuming envelopes.
 
-The validator (`skills/norma-analyze/normativa-v1-validate.py`) is the executable form of this rule. If you change strict types here, change the validator + schema doc + canonical example in lockstep.
+The validator (`skills/normativa-analyze/normativa-v1-validate.py`) is the executable form of this rule. If you change strict types here, change the validator + schema doc + canonical example in lockstep.
 
 ## Top-level shape
 
@@ -51,7 +51,7 @@ sources (object, includes required map_url)
 Before declaring an analysis complete, run:
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/norma-analyze/normativa-v1-validate.py <output-path>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/normativa-analyze/normativa-v1-validate.py <output-path>
 ```
 
 Exit code 0 + `ok ...` line on stdout = pass. Anything else = fix and re-run. The validator prints concrete per-field errors (e.g. `selection.padrones[0]: expected string, got int (130)`); read each one before patching.

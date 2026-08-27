@@ -8,8 +8,8 @@
     {
       "name": "norma",
       "source": "./",
-      "description": "Norma — Maldonado UY zoning toolkit (TONE / Digesto Departamental, Volumen V). Dispatcher /norma routes to sub-skills: /norma-analyze (envelope analysis) + /norma-informe (printable A4 HTML report). Includes shared rules (envelope contract, disclaimer, units, terminology), a marker-driven disclaimer hook, and a structural lint.",
-      "version": "0.9.0"
+      "description": "Norma — Maldonado UY zoning toolkit (TONE / Digesto Departamental, Volumen V). Dispatcher /norma routes to sub-skills: /norma-analyze (envelope analysis) + /norma-informe (printable A4 HTML report) + /norma-massing (interactive 3D massing configurator). Includes shared rules (envelope contract, disclaimer, units, terminology), a marker-driven disclaimer hook, and a structural lint.",
+      "version": "0.10.0"
     }
   ]
 }

@@ -42,7 +42,8 @@ Examples:
 | Verbs: "analyze", "envolvente", "FOS/FOT", "tipologías", "what can I build", "evaluate this lot" | **`/norma-analyze`** | Skill |
 | `--input <path>` where `<path>` ends in `.normativa.v1.json` (existing envelope, no re-analysis needed) | **`/norma-informe`** | Skill |
 | Verbs: "render", "informe", "report", "printable", "PDF", "HTML" + reference to existing analysis | **`/norma-informe`** | Skill |
-| User explicitly names a sub-skill ("run /norma-analyze", "skip to /norma-informe") | That skill directly | Skill |
+| Verbs: "massing", "masa", "volumetría", "configurador", "3D", "test forms/partidos", "torre/barra/patio", "cuántas viviendas entran" + an existing analysis | **`/norma-massing`** | Skill |
+| User explicitly names a sub-skill ("run /norma-analyze", "skip to /norma-informe", "/norma-massing") | That skill directly | Skill |
 
 ## Routing rules
 
@@ -86,10 +87,12 @@ If the user types just `/norma` with no arguments, show:
                        /norma <pasted ArcGIS JSON>
   • Render a report → /norma --input <path>.normativa.v1.json
                        (or just point me at any *.normativa.v1.json in CWD)
+  • Explore massing → /norma-massing <path>.normativa.v1.json
+                       (interactive 3D configurator inside the envelope)
 
-Behind the scenes I dispatch to /norma-analyze for analysis and
-/norma-informe for the printable report. You can call those
-directly if you prefer.
+Behind the scenes I dispatch to /norma-analyze for analysis,
+/norma-informe for the printable report, and /norma-massing for the
+interactive 3D massing studio. You can call those directly if you prefer.
 ```
 
 ### Rule 5: Unknown — show the menu
@@ -109,6 +112,7 @@ If the request doesn't match any route and isn't obviously zoning/envelope-relat
 ```
 ${CLAUDE_PLUGIN_ROOT}/skills/norma-analyze/SKILL.md   # envelope analysis
 ${CLAUDE_PLUGIN_ROOT}/skills/norma-informe/SKILL.md   # printable HTML report
+${CLAUDE_PLUGIN_ROOT}/skills/norma-massing/SKILL.md   # interactive 3D massing configurator
 ```
 
 If you ever need to extend Norma with a new sub-skill (e.g., `/norma-3d` for envelope visualization, `/norma-proforma` for financial feasibility), the pattern is: add a row to the routing table, drop a new `skills/<name>/SKILL.md`, run `scripts/lint.sh` to verify the structure, and the dispatcher picks it up.

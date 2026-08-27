@@ -5110,9 +5110,11 @@
                     "fondo_m": null
                   },
                   "notas": [
-                    "Parámetros Opcionales del Art. 308 (Decreto 3889)",
-                    "Altura máx. 7 m; FOS NNP 50%"
-                  ]
+                    "Parámetros Opcionales del Art. 308 del TONE (redacción dada por Decreto 3889) — el Digesto los renumeró a D.340 (el segundo de dos artículos D.340 consecutivos). La cita 'Art. 308' es la de la fuente, no una cita obsoleta.",
+                    "Esta zona TOPEA el régimen: altura máx. 7 m (no 9 m) y FOS NNP 50%.",
+                    "El régimen hotelero es departamental (áreas urbanas y suburbanas, predio ≥ 2.000 m²), no una particularidad de 1.4.4. Ver normativa/datos/regimen-hotelero.json."
+                  ],
+                  "_regimen_ref": "regimen-hotelero.json#hoteleria"
                 }
               ],
               "_notes": [

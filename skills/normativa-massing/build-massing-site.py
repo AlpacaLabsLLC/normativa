@@ -29,7 +29,7 @@ applicable_tipologias = _eng.applicable_tipologias
 TONE = os.path.join(ANALYZE, "datos", "tone-zones.json")
 PADRONES_API = ("https://gis.maldonado.gub.uy/arcgis/rest/services/"
                 "Servicios_AGOL/Padrones/FeatureServer/0/query")
-UA = "estudio-local/1.0 (norma-massing; f@alpacalabs.co)"
+UA = "estudio-local/1.0 (norma-massing; hello@alpa.llc)"
 # TONE special rule (Art. D.283): in these La Juanita manzanas, unifamiliar
 # (unidad_aislada) is prohibited on englobado lots > 1.000 m².
 JUANITA_NO_UNIFAMILIAR = {3,4,26,27,40,41,48,49,50,51,52,54,55,56,57,58,59,60,61,62,68,69,70,71}
